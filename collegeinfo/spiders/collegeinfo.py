@@ -1,6 +1,6 @@
 from scrapy.spiders import Spider
-from scrapy.selector import Selector
-
+#from scrapy.selector import Selector
+import types
 from collegeinfo.items import CollegeinfoItem
 import scrapy
 
@@ -14,9 +14,8 @@ class collegeinfo(Spider):
    
     def parse(self, response):
         #urls=response.xpath('//table[@class="fortable_14"][2]/tbody/tr/td[4]/a/@href').extract()
+        print(type(response))
         urls=response.xpath('//table[@class="fortable_14"][2]/tbody/tr').extract()
-       
-        
         for i  in range(len(urls)-1):
             item=CollegeinfoItem()
             item["researchdirection"]=str(response.xpath('//table[@class="fortable_14"][2]/tbody/tr['+str(i+2)+']/td[2]/text()').extract()[0]).strip()
@@ -41,7 +40,8 @@ class collegeinfo(Spider):
         item["email"]=response.xpath('//table[@class="tablestyle"]/tr[6]/td[2]/span/text()').extract()
         item["college"]=response.xpath('//table[@class="tablestyle"]/tr[1]/td[2]/span/text()').extract()
         item["jobtitle"]=response.xpath('//table[@class="tablestyle"]/tr[3]/td[2]/span/text()').extract()
-        item["age"]=2017-int(response.xpath('//table[@class="tablestyle"]/tr[3]/td[1]/span/text()').extract()[0].split('-')[0])
+        if response.xpath('//table[@class="tablestyle"]/tr[3]/td[1]/span/text()').extract():
+            item["age"]=2017-int(response.xpath('//table[@class="tablestyle"]/tr[3]/td[1]/span/text()').extract()[0].split('-')[0])
         yield item
     
         
